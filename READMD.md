@@ -6,6 +6,7 @@
 3. [FB2-HEALTH API AND TEST CODE CONVENTION](#fb2-health-api-and-test-code-convention)
 4. [FB3-Setting up your local MySQL DB and Mybatis](#fb3-setting-up-your-local-mysql-db-and-mybatis)
 5. [FB4-Validation Settings](#fb4-validation-settings)
+6. [FB5-CURD-API]()
 
 
 cf) FB - feature branch
@@ -118,3 +119,19 @@ Spring Boot의 Validation 라이브러리는 유효성을 검사할 때 매우 �
 
 #### `GroupSequence` 를 이용하면 원하는 Group 순서로 Validation을 실시해서 Message를 받을 수 있다.
 > * @NotNull/@NotBlank -> @Size -> @Min/@Max -> @Pattern
+
+## [FB5] CRUD APIs
+* tb_customer 테이블은 단순 예제를 위한 것 (`크게 의미 없음`) 
+* APIs
+  * GET (검색 및 페이징): ~/api/v1/customers
+  * GET (고객사 상세 조회): ~/api/v1/customer
+  * POST (고객사 생성): ~/api/v1/customer
+  * PUT (고객사 정보 수정): ~/api/v1/customer
+  * DELETE (고객사 삭제): ~/api/v1/customer
+
+> 참고: 일반적으로는 아래와 같이 많이 쓰이지만 개인적으로 취향 으로 인해 위의 방식을 적용 함
+>  * GET (검색 및 페이징): ~/api/v1/customers
+>  * GET (고객사 상세 조회): ~/api/v1/customers/customerCode
+>  * POST (고객사 생성): ~/api/v1/customers
+>  * PUT (고객사 정보 수정): ~/api/v1/customers
+>  * DELETE (고객사 삭제): ~/api/v1/customers
