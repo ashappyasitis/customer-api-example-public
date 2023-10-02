@@ -1,3 +1,23 @@
 server:
+  port: ${SERVER_PORT}
   shutdown: graceful
-  port: 15000
+  tomcat:
+    threads:
+      max: 1000
+
+spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:${DB_NAME}://${DB_HOST}:${DB_PORT}/customer?allowPublicKeyRetrieval=true&useSSL=false&autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul&allowMultiQueries=true
+      username: ${DB_USER}
+      password: ${DB_PASSWORD}
+      pool-name: ${CP_NAME}
+      driver-class-name: ${DB_DRIVER_CLASS_NAME}
+      connection-test-query: 'select 1'
+
+  main:
+    allow-bean-definition-overriding: true
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher # like /**/*.do

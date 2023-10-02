@@ -4,6 +4,7 @@
 1. [FB1-1 PROJECT INFO](#fb1-1-show-project-info)
 2. [FB1-2-SERVER VERSIONING SYSTEM AND JAVA VERSION](#fb1-2-server-version-and-java-version)
 3. [FB2-HEALTH API AND TEST CODE CONVENTION](#fb2-health-api-and-test-code-convention)
+4. [FB3-Setting up your local MySQL DB and Mybatis](#fb3-setting-up-your-local-mysql-db-and-mybatis)
 
 
 cf) FB - feature branch
@@ -65,8 +66,6 @@ example) FB1-0 ===> FB1-2 ===> FB1-3
     "responseAt": "2023-10-03 05:27:20+0900"
 }
 ```
-
-
 ### TEST CODE
 **BDD: Behavior Driven Development**
 * Given: 주어진 값 설정
@@ -82,3 +81,32 @@ example) FB1-0 ===> FB1-2 ===> FB1-3
         // then: 테스트 완료 후 조건 확인 
     }
 ```
+
+## [FB3] Setting up your local MySQL DB and Mybatis
+### Create a local DB
+> docker run --name mysql_3306 -p 3306:3306 -e MYSQL_ROOT_PASSWORD=pw_mysql -e TZ=Asia/Seoul --restart=always -d mysql:latest
+
+* 33306 port 에 MySQL을 Docker로 생성한다.
+* ID: root
+* PW: 33306
+```shell
+docker run --name mysql_33306 -p 33306:3306 -e MYSQL_ROOT_PASSWORD=33306 -e TZ=Asia/Seoul --restart=always -d mysql:latest
+```
+### DotEnv 사용
+* `.env.example` 파일을 이용해서 `.env` 파일 생성
+* Program 실행시에는 `.env` 파일을 사용함
+* [주의사항] git 에는 `.env.example`만 올리고 다른 `.env` 파일은 올리지 않도록 주의 한다.
+
+```dotenv
+SERVER_PORT=15000
+DB_NAME=mysql
+DB_HOST=localhost
+DB_PORT=33306
+DB_USER=root
+DB_PASSWORD=33306
+DB_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+CP_NAME=cp-customer-local
+```
+
+### DB Schema 및 Table 생성
+`sql/customer_setup.sql` 파일 참조

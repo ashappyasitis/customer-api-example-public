@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="me.kevin.customerapi.repository.mybatis.CustomerMapper">
+
+    <insert id="insertCustomer" parameterType="me.kevin.customerapi.model.customer.dto.CreateCustomerParams"
+            useGeneratedKeys="true" keyProperty="customerCode">
+        INSERT INTO tb_customer
+        (customer_type,
+         company_name,
+         contract_type,
+         operation_type,
+         is_enabled,
+         created_by,
+         updated_by)
+        values (#{customerType},
+                #{companyName},
+                #{contractType},
+                #{operationType},
+                true,
+                #{createdBy},
+                #{createdBy})
+    </insert>
+
+    <update id="updateCustomer" parameterType="me.kevin.customerapi.model.entity.Customer">
+        UPDATE tb_customer
+        SET customer_type  = #{customerType},
+            company_name   = #{companyName},
+            contract_type  = #{contractType},
+            operation_type = #{operationType},
+            updated_by     = #{updatedBy}
+        WHERE customer_code = #{customerCode}
+    </update>
+
+    <update id="disableCustomer" parameterType="me.kevin.customerapi.model.customer.valueobject.DeleteCustomerParams">
+        UPDATE tb_customer
+        SET is_enabled = false,
+            updated_by = #{updatedBy}
+        WHERE customer_code = #{customerCode}
+    </update>
+
+    <select id="selectCustomer"
+            parameterType="me.kevin.customerapi.model.customer.valueobject.ReadCustomerParams"
+            resultType="me.kevin.customerapi.model.entity.Customer">
+        SELECT customer_code  AS customerCode,
+               customer_type  AS customerType,
+               company_name   AS companyName,
+               contract_type  AS contractType,
+               operation_type AS operationType,
+               is_enabled     AS isEnabled
+        FROM tb_customer
+        WHERE CUSTOMER_CODE = #{customerCode}
+    </select>
+
+    <select id="selectCustomers"
+            parameterType="me.kevin.customerapi.model.customer.dto.SearchCustomerParams"
+            resultType="me.kevin.customerapi.model.entity.Customer">
+        SELECT customer_code  AS customerCode,
+               customer_type  AS customerType,
+               company_name   AS companyName,
+               contract_type  AS contractType,
+               operation_type AS operationType,
+               is_enabled     AS isEnabled
+        FROM tb_customer
+        WHERE CUSTOMER_NAME LIKE CONCAT('%', #{customerCode}, '%')
+        OFFSET #{offset}, #{pageSize}
+    </select>
+
+    <select id="selectCountCustomers"
+            parameterType="me.kevin.customerapi.model.customer.dto.SearchCustomerParams"
+            resultType="long">
+        SELECT count(customer_code)
+        FROM tb_customer
+        WHERE company_name LIKE CONCAT('%', #{companyName}, '%')
+    </select>
+
+</mapper>
