@@ -14,8 +14,8 @@ import java.util.TimeZone;
 public class ProjectInfoComponent {
     public static String NAME = "CUSTOMER-API";
     public static String VERSION = "v0.0.0";
-    public static String SEQUENCE = "FB1-2";
-    public static String DESCRIPTION = "SERVER VERSIONING AND JAVA VERSION";
+    public static String SEQUENCE = "master";
+    public static String DESCRIPTION = "SHOW PROJECT INFO, SERVER VERSIONING AND JAVA VERSION";
 
     private final Environment environment;
     private final ServerProperties serverProperties;
