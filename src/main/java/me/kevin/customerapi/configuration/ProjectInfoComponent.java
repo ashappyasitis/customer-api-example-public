@@ -15,8 +15,8 @@ import java.util.TimeZone;
 public class ProjectInfoComponent {
     public static String NAME = "CUSTOMER-API";
     public static String VERSION = "v0.0.2";
-    public static String SEQUENCE = "master";
-    public static String DESCRIPTION = "Setting up your local MySQL DB and Mybatis";
+    public static String SEQUENCE = "FB4-1";
+    public static String DESCRIPTION = "Validation Settings";
 
     private final Environment environment;
     private final ServerProperties serverProperties;

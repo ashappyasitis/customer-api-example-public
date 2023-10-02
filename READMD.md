@@ -5,6 +5,7 @@
 2. [FB1-2-SERVER VERSIONING SYSTEM AND JAVA VERSION](#fb1-2-server-version-and-java-version)
 3. [FB2-HEALTH API AND TEST CODE CONVENTION](#fb2-health-api-and-test-code-convention)
 4. [FB3-Setting up your local MySQL DB and Mybatis](#fb3-setting-up-your-local-mysql-db-and-mybatis)
+5. [FB4-Validation Settings](#fb4-validation-settings)
 
 
 cf) FB - feature branch
@@ -110,3 +111,10 @@ CP_NAME=cp-customer-local
 
 ### DB Schema 및 Table 생성
 `sql/customer_setup.sql` 파일 참조
+
+## [FB4] Validation Settings
+Spring Boot의 Validation 라이브러리는 유효성을 검사할 때 매우 많이 사용되는 라이브러리이다.
+이 라이브러리의 단점은 유효성 검사 결과가 랜덤(Random)하게 나온다는 것이다.
+
+#### `GroupSequence` 를 이용하면 원하는 Group 순서로 Validation을 실시해서 Message를 받을 수 있다.
+> * @NotNull/@NotBlank -> @Size -> @Min/@Max -> @Pattern
