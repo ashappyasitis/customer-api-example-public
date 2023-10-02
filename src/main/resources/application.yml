@@ -1,1 +1,3 @@
-
+server:
+  shutdown: graceful
+  port: 15000
