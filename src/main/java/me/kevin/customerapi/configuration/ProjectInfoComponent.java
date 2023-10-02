@@ -14,9 +14,9 @@ import java.util.TimeZone;
 @RequiredArgsConstructor
 public class ProjectInfoComponent {
     public static String NAME = "CUSTOMER-API";
-    public static String VERSION = "v0.0.0";
-    public static String SEQUENCE = "FB2-2";
-    public static String DESCRIPTION = "TEST CODE CONVENTION";
+    public static String VERSION = "v0.0.1";
+    public static String SEQUENCE = "master";
+    public static String DESCRIPTION = "HEALTH API AND TEST CODE CONVENTION";
 
     private final Environment environment;
     private final ServerProperties serverProperties;
