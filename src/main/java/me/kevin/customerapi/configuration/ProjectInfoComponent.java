@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.util.TimeZone;
 
@@ -15,8 +14,8 @@ import java.util.TimeZone;
 public class ProjectInfoComponent {
     public static String NAME = "CUSTOMER-API";
     public static String VERSION = "v0.0.0";
-    public static String SEQUENCE = "FB1-1";
-    public static String DESCRIPTION = "SHOW PROJECT INFO";
+    public static String SEQUENCE = "FB1-2";
+    public static String DESCRIPTION = "SERVER VERSIONING AND JAVA VERSION";
 
     private final Environment environment;
     private final ServerProperties serverProperties;
