@@ -14,8 +14,8 @@ import java.util.TimeZone;
 @RequiredArgsConstructor
 public class ProjectInfoComponent {
     public static String NAME = "CUSTOMER-API";
-    public static String VERSION = "v0.0.5";
-    public static String SEQUENCE = "FB7-1";
+    public static String VERSION = "v0.0.6";
+    public static String SEQUENCE = "master";
     public static String DESCRIPTION = "EXCEPTION HANDLING";
 
     private final Environment environment;
