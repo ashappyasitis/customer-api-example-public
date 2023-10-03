@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+    <!-- logfile path: ${CLASSPATH}/${LOG_DIR}}   -->
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+
+    <!--    <property name="logDir" value="${APP_LOG_PATH}" />-->
+
+    <springProfile name="(loc|local)">
+        <property name="LOG_DIR" value="logs"/>
+        <property name="MAX_PERIOD_IN_DAYS" value="1"/>
+    </springProfile>
+
+    <springProfile name="(dev|stg)">
+        <property name="LOG_DIR" value="logs"/>
+        <property name="MAX_PERIOD_IN_DAYS" value="7"/>
+    </springProfile>
+
+    <springProfile name="(prod)">
+        <property name="LOG_DIR" value="logs"/>
+        <property name="MAX_PERIOD_IN_DAYS" value="90"/>
+    </springProfile>
+
+    <property name="LOG_PATTERN"
+              value="[%d{YYYY-MM-dd HH:mm:ss.SSS z, Asia/Seoul}] [%-5level] [%thread] %logger{36}:%L - %msg %n"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SERVER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/customer-api.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/customer-api/customer-api.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1GB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${MAX_PERIOD_IN_DAYS}</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="HIKARI_CP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/hikari-cp.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/hikari-cp/hikari-cp.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1GB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>${MAX_PERIOD_IN_DAYS}</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <!-- Global settings  -->
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="SERVER"/>
+    </root>
+    <logger name="com.zaxxer.hikari.HikariConfig" level="DEBUG" additivity="false">
+        <appender-ref ref="HIKARI_CP"/>
+    </logger>
+    <logger name="com.zaxxer.hikari" level="DEBUG" additivity="false">
+        <appender-ref ref="HIKARI_CP"/>
+    </logger>
+    <logger name="org.apache.ibatis" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="SERVER"/>
+    </logger>
+
+</configuration>

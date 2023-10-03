@@ -6,7 +6,8 @@
 3. [FB2-HEALTH API AND TEST CODE CONVENTION](#fb2-health-api-and-test-code-convention)
 4. [FB3-Setting up your local MySQL DB and Mybatis](#fb3-setting-up-your-local-mysql-db-and-mybatis)
 5. [FB4-Validation Settings](#fb4-validation-settings)
-6. [FB5-CURD-API]()
+6. [FB5-CURD-API](#fb5-crud-apis)
+7. [FB6-LOGGING](#fb6-logging)
 
 
 cf) FB - feature branch
@@ -135,3 +136,24 @@ Spring Boot의 Validation 라이브러리는 유효성을 검사할 때 매우 �
 >  * POST (고객사 생성): ~/api/v1/customers
 >  * PUT (고객사 정보 수정): ~/api/v1/customers
 >  * DELETE (고객사 삭제): ~/api/v1/customers
+
+## [FB6] LOGGING
+로그는 전략적인 관점에서 접근을 해야 한다.
+
+* 목표1: 로그는 최소화 하면서 디버깅에는 문제 없게 만들기
+  * 단, 결재 및 정산과 관련된 경우에는 로그를 상세하게 남기는 것이 전략이 될 수 있다.
+* 목표2: 외부 시스템과 연동하는 경우 논쟁을 위해 Filter 단 Logging이 필요 함
+  * 내부 시스템간 연동을 하는 경우에는 Filter 단 로깅이 필요 없을 수 있다.
+* 목표3: 필요한 내용만 찍을 수 있게 하기
+  * Filter단 에서는 Hacking tool 과 같은 의미 없는 Logging도 찍힐 수 있음
+  * Interceptor단 에서는 Controller에서 제공된 내용을 url을 기반으로 로깅 할 수 있음
+  * health api 처럼 주기적으로 자주 호출되는 API는 로깅 대상에서 제외하는 것이 좋음
+
+> * Filter: AccessLogFilter
+> * Interceptor: LogInterceptor
+
+###  ContentCachingRequestWrapper, ContentCachingResponseWrapper
+* HttpServletRequest의 Body는 getInputStream()을 통해서 한 번만 값을 읽어 올 수 있다. 그래서 ContentCachingRequestWrapper 와 같은 Wrapper를 사용한다.
+  * 주의해야 할 점: Body의 값을 Memory에 Caching 해야 하기 때문에 벌크로 데이터를 주고 받을 때에는 메모리를 충분히 확보해야 함
+* 현 예제에서는 Filter에서 ContentCachingRequestWrapper로 변경해서 내려주고 있기 때문에 Interceptor에서 문제 없이 사용가능 함
+  * `HttpServletRequest` -> `new ContentCachingRequestWrapper`(At Filter) ->  `ContentCachingRequestWrapper`(Interceptor)
