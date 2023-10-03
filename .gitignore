@@ -37,3 +37,6 @@ out/
 .vscode/
 /.env
 /.logs/**
+/LOG_DIR_IS_UNDEFINED/customer-api.log
+/LOG_DIR_IS_UNDEFINED/hikari-cp.log
+/logs/
