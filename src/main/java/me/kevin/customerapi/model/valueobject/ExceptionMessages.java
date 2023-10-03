@@ -15,7 +15,11 @@ public enum ExceptionMessages {
     NOT_NULL_ERROR_MESSAGE(BAD_REQUEST, "필수 입력값입니다."),
     POSITIVE_ERROR_MESSAGE(BAD_REQUEST, "0보다 커야 합니다"),
     HTTP_METHOD_NOT_SUPPORTED(METHOD_NOT_ALLOWED, "허용되지 않은 요청 메소드"),
-    SIZE_LIMIT_ERROR_MESSAGE(BAD_REQUEST, "값의 크기가 유효하지 않습니다.");
+    SIZE_LIMIT_ERROR_MESSAGE(BAD_REQUEST, "값의 크기가 유효하지 않습니다."),
+
+    // Customer
+    CUSTOMER_NOT_FOUND(BAD_REQUEST, "고객사가 존재하지 않습니다.")
+    ;
 
 
     private final HttpStatus originalStatus;

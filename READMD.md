@@ -9,6 +9,7 @@
 6. [FB5-CURD-API](#fb5-crud-apis)
 7. [FB6-LOGGING](#fb6-logging)
 8. [FB7-Global Exception Handler](#fb7-global-exception-handler)
+9. [FB8-Enhancement](#fb8-enhancement)
 
 
 cf) FB - feature branch
@@ -189,4 +190,33 @@ Spring Boot의 Validation 라이브러리는 유효성을 검사할 때 매우 �
         }
     ]
 }
+```
+
+## [FB8] Enhancement
+
+### Domain 및 Handler 만들기
+* Service 단에서 모든 것을 처리하는 방법은 빠르게 개발 할 수 있지만 의존성이 강하게 결합되어 있어 추후 수정 시 어려움을 겪을 수 있다.
+  * domain 단계 추가 하기
+  * Handler를 이용해서 처리하기
+
+### Trace Log 
+* 트레이스 로그는 디버깅 시 많은 도움을 주지만 서비스의 성능이 저하 될 수 있다.
+  * 실제 필요로 되는 로그만 필터링해서 찍어주는 방법도 있음
+
+**Trace Log를 그대로 찍었을 경우**
+```text
+at me.kevin.customerapi.domain.customer.DeleteCustomerHandler.delete(DeleteCustomerHandler.java:28)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+.... 중략 ... more than 100 lines
+```
+**필요한 부분만 필터링 한 경우**
+```text
+me.kevin.customerapi.domain.customer.DeleteCustomerHandler.delete(DeleteCustomerHandler.java:28)
+me.kevin.customerapi.domain.customer.DeleteCustomerHandler$$SpringCGLIB$$0.delete(<generated>)
+me.kevin.customerapi.service.CustomerService.deleteCustomer(CustomerService.java:43)
+me.kevin.customerapi.controller.CustomerApiController.deleteCustomer(CustomerApiController.java:69)
+me.kevin.customerapi.filter.AccessLogFilter.doFilter(AccessLogFilter.java:47) 
 ```

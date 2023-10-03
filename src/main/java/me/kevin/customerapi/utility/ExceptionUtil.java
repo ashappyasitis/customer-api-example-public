@@ -8,6 +8,7 @@ import me.kevin.customerapi.model.valueobject.ExceptionMessages;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 public class ExceptionUtil {
@@ -25,6 +26,14 @@ public class ExceptionUtil {
                         .build(),
                 message.getOriginalStatus()
         );
+    }
+
+    public static String filterErrorMessage(Exception exception) {
+        List<String> traceList = Arrays.stream(exception.getStackTrace())
+                .map(StackTraceElement::toString)
+                .filter(trace -> trace.startsWith("me.kevin"))
+                .toList();
+        return String.join("\n", traceList);
     }
 
     public static String getFieldFromConstraintViolation(ConstraintViolation<?> violation) {

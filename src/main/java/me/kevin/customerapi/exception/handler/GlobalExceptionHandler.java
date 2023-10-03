@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import me.kevin.customerapi.exception.*;
+import me.kevin.customerapi.exception.domain.DomainException;
 import me.kevin.customerapi.model.dto.ApiErrorResponse;
 import me.kevin.customerapi.model.valueobject.ErrorDetail;
 import me.kevin.customerapi.utility.ExceptionUtil;
@@ -136,5 +137,16 @@ public class GlobalExceptionHandler {
         log.error("[ERROR]SizeLimitException: {}", toJson(exception.getErrorList()), exception);
 
         return getResponseEntityBy(request, SIZE_LIMIT_ERROR_MESSAGE, exception.getErrorList());
+    }
+
+    @ExceptionHandler(value = {DomainException.class})
+    public ResponseEntity<ApiErrorResponse> handleSizeLimitException(DomainException exception, HttpServletRequest request) {
+        log.error("[ERROR] {}: {} \n{}",
+                exception.getExceptionMessage().getMessage(),
+                toJson(exception.getErrorList()),
+                ExceptionUtil.filterErrorMessage(exception)
+        );
+
+        return getResponseEntityBy(request, exception.getExceptionMessage(), exception.getErrorList());
     }
 }
