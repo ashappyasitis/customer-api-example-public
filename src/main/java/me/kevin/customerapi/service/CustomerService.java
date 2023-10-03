@@ -1,6 +1,7 @@
 package me.kevin.customerapi.service;
 
 import lombok.RequiredArgsConstructor;
+import me.kevin.customerapi.domain.customer.*;
 import me.kevin.customerapi.mapper.CustomerServiceMapper;
 import me.kevin.customerapi.model.customer.dto.*;
 import me.kevin.customerapi.model.customer.valueobject.DeleteCustomerParams;
@@ -14,56 +15,31 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CustomerService {
-    private final CustomerServiceMapper customerServiceMapper;
-    private final CustomerMapper customerMapper;
+    private final CreateCustomerHandler createCustomerHandler;
+    private final UpdateCustomerHandler updateCustomerHandler;
+    private final DeleteCustomerHandler deleteCustomerHandler;
+    private final ReadCustomerHandler readCustomerHandler;
+    private final SearchCustomerHandler searchCustomerHandler;
 
-    @Transactional(readOnly = true)
+
     public SearchCustomersResponse searchCustomers(SearchCustomersRequest request) {
-        List<Customer> customerList = null;
-        SearchCustomerParams searchCustomerParams = customerServiceMapper.toSearchCustomerParams(request);
-
-        long totalElements = customerMapper.selectCountCustomers(searchCustomerParams);
-        if (totalElements > 0) {
-            customerList = customerMapper.selectCustomers(searchCustomerParams);
-        }
-
-        return customerServiceMapper.toSearchCustomersResponse(customerList, searchCustomerParams, totalElements);
+        return searchCustomerHandler.search(request);
     }
 
-    @Transactional(readOnly = true)
     public ReadCustomerResponse readCustomer(ReadCustomerRequest request) {
-        return customerServiceMapper.toReadCustomerResponse(
-                customerMapper.selectCustomer(
-                        customerServiceMapper.toReadCustomerParams(request)
-                )
-        );
+        return readCustomerHandler.read(request);
     }
 
     public CreateCustomerResponse createCustomer(CreateCustomerRequest request) {
-        CreateCustomerParams createCustomerParams = customerServiceMapper.toCreateCustomerParams(request);
-        customerMapper.insertCustomer(createCustomerParams);
-
-        return customerServiceMapper.toCreateCustomerResponse(
-                createCustomerParams.getCustomerCode(),
-                createCustomerParams.getCompanyName()
-        );
+        return createCustomerHandler.create(request);
     }
 
     public UpdateCustomerResponse updateCustomer(UpdateCustomerRequest request) {
-        UpdateCustomerParams updateCustomerParams = customerServiceMapper.toUpdateCustomerParams(request);
-
-        customerMapper.updateCustomer(updateCustomerParams);
-
-        return customerServiceMapper.toUpdateCustomerResponse(updateCustomerParams);
+        return updateCustomerHandler.update(request);
     }
 
     public DeleteCustomerResponse deleteCustomer(DeleteCustomerRequest request) {
-        DeleteCustomerParams deleteCustomerParams = customerServiceMapper.toDeleteCustomerParams(request);
-
-        customerMapper.disableCustomer(deleteCustomerParams);
-
-        return customerServiceMapper.toDeleteCustomerResponse(deleteCustomerParams);
+        return deleteCustomerHandler.delete(request);
     }
 }
