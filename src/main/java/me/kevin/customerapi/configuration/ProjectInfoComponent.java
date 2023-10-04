@@ -14,9 +14,9 @@ import java.util.TimeZone;
 @RequiredArgsConstructor
 public class ProjectInfoComponent {
     public static String NAME = "CUSTOMER-API";
-    public static String VERSION = "v0.0.6";
+    public static String VERSION = "v0.0.7";
     public static String SEQUENCE = "master";
-    public static String DESCRIPTION = "EXCEPTION HANDLING";
+    public static String DESCRIPTION = "READMD.md -> README.md 로 변경";
 
     private final Environment environment;
     private final ServerProperties serverProperties;
