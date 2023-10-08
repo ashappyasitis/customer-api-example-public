@@ -18,6 +18,7 @@ import java.util.List;
 public class CustomerService {
     private final CustomerServiceMapper customerServiceMapper;
     private final CustomerMapper customerMapper;
+    private final EmailNotificationService emailNotificationService;
 
     @Transactional(readOnly = true)
     public SearchCustomersResponse searchCustomers(SearchCustomersRequest request) {
@@ -43,7 +44,9 @@ public class CustomerService {
 
     public CreateCustomerResponse createCustomer(CreateCustomerRequest request) {
         CreateCustomerParams createCustomerParams = customerServiceMapper.toCreateCustomerParams(request);
+
         customerMapper.insertCustomer(createCustomerParams);
+        emailNotificationService.notifyWhenCustomerCreated();
 
         return customerServiceMapper.toCreateCustomerResponse(
                 createCustomerParams.getCustomerCode(),
@@ -55,6 +58,7 @@ public class CustomerService {
         UpdateCustomerParams updateCustomerParams = customerServiceMapper.toUpdateCustomerParams(request);
 
         customerMapper.updateCustomer(updateCustomerParams);
+        emailNotificationService.notifyWhenCustomerUpdated();
 
         return customerServiceMapper.toUpdateCustomerResponse(updateCustomerParams);
     }
@@ -63,6 +67,7 @@ public class CustomerService {
         DeleteCustomerParams deleteCustomerParams = customerServiceMapper.toDeleteCustomerParams(request);
 
         customerMapper.disableCustomer(deleteCustomerParams);
+        emailNotificationService.notifyWhenCustomerDeleted();
 
         return customerServiceMapper.toDeleteCustomerResponse(deleteCustomerParams);
     }

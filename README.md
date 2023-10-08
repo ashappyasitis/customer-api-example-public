@@ -9,6 +9,7 @@
 6. [FB5-CURD-API](#fb5-crud-apis)
 7. [FB6-LOGGING](#fb6-logging)
 8. [FB7-Global Exception Handler](#fb7-global-exception-handler)
+9. [FB8-Add notification](#fb8-add-notification)
 
 
 cf) FB - feature branch
@@ -190,3 +191,8 @@ Spring Boot의 Validation 라이브러리는 유효성을 검사할 때 매우 �
     ]
 }
 ```
+
+## [FB8] Add notification
+### 신 기능 추가 
+* 고객사 생성, 수정 및 삭제 시 알림기능 추가
+
