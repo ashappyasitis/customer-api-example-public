@@ -15,8 +15,8 @@ import java.util.TimeZone;
 public class ProjectInfoComponent {
     public static String NAME = "CUSTOMER-API";
     public static String VERSION = "v0.0.6";
-    public static String SEQUENCE = "FB8-1";
-    public static String DESCRIPTION = "Add Email Notification";
+    public static String SEQUENCE = "FB8-2";
+    public static String DESCRIPTION = "이메일 전송 중 에러 발생 시나리오";
 
     private final Environment environment;
     private final ServerProperties serverProperties;

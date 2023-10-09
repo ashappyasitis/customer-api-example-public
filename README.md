@@ -9,7 +9,7 @@
 6. [FB5-CURD-API](#fb5-crud-apis)
 7. [FB6-LOGGING](#fb6-logging)
 8. [FB7-Global Exception Handler](#fb7-global-exception-handler)
-9. [FB8-Add notification](#fb8-add-notification)
+9. [FB8-Focusing On Your Domain](#fb8-focusing-on-your-domain)
 
 
 cf) FB - feature branch
@@ -192,7 +192,55 @@ Spring Boot의 Validation 라이브러리는 유효성을 검사할 때 매우 �
 }
 ```
 
-## [FB8] Add notification
+## [FB8] Focusing On Your Domain
 ### 신 기능 추가 
 * 고객사 생성, 수정 및 삭제 시 알림기능 추가
 
+### 알림 전송 중 오류 -> Rollback 문제
+* 알림 전송 시 발생한 오류에 의해서 고객사 생성, 수정 및 삭제와 같은 주요 기능이 영향을 받는 문제
+
+### DB 로그 설정 
+* `net.sf.log4jdbc.sql.jdbcapi.DriverSpy` 추가
+* `.env` 예제
+```properties
+SERVER_PORT=15000
+DB_NAME=log4jdbc:mysql
+DB_HOST=localhost
+DB_PORT=33306
+DB_USER=root
+DB_PASSWORD=33306
+DB_DRIVER_CLASS_NAME=net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+CP_NAME=cp-customer-local
+```
+* `log4jdbc.log4j2.properties`
+```properties
+log4jdbc.spylogdelegator.name=net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator
+log4jdbc.dump.sql.maxlinelength=0
+log4jdbc.auto.load.popular.drivers=false
+log4jdbc.drivers=com.mysql.cj.jdbc.Driver
+```
+* 주의
+> `net.sf.log4jdbc.sql.jdbcapi.DriverSpy` 는 상용서비스 성능에 영향을 줄 수 있기 때문에 주의 필요!
+
+### 롤백 시나리오
+**문제인식: 이메일로 알림을 보내는 건 부 기능인데 고객사를 삭제하는 메인 기능이 영향을 받음** 
+* 고객사 삭제 요청 (DELETE /api/v1/customer)
+  * 고객사 삭제 성공 
+```sql
+SET is_enabled = false,
+    updated_by = 'KEVIN'
+    WHERE customer_code = 8
+```
+* E-Mail 발송 중 에러 발생
+  * DB 롤백 및 실패 처리 
+```text
+[2023-10-10 05:06:00.220 KST] [ERROR] [http-nio-15000-exec-4] m.k.c.s.EmailNotificationService:18 - 고객사 삭제시 에러 발생!!! 
+[2023-10-10 05:06:00.229 KST] [INFO ] [http-nio-15000-exec-4] jdbc.audit:175 - 1. Connection.rollback() returned  
+[2023-10-10 05:06:00.230 KST] [INFO ] [http-nio-15000-exec-4] jdbc.audit:175 - 1. Connection.setAutoCommit(true) returned  
+[2023-10-10 05:06:00.230 KST] [INFO ] [http-nio-15000-exec-4] jdbc.audit:175 - 1. Connection.clearWarnings() returned  
+[2023-10-10 05:06:00.230 KST] [ERROR] [http-nio-15000-exec-4] m.k.c.e.h.GlobalExceptionHandler:40 - 알림 전송 중 에러 발생 
+java.lang.RuntimeException: 알림 전송 중 에러 발생
+	at me.kevin.customerapi.service.EmailNotificationService.notifyWhenCustomerDeleted(EmailNotificationService.java:19)
+	at me.kevin.customerapi.service.CustomerService.deleteCustomer(CustomerService.java:70)	
+	...
+```

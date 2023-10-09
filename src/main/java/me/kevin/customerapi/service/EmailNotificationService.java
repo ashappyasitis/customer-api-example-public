@@ -15,6 +15,7 @@ public class EmailNotificationService {
     }
 
     public void notifyWhenCustomerDeleted() {
-        log.info("고객사 삭제가 완료되었습니다.");
+        log.error("고객사 삭제시 에러 발생!!!");
+        throw new RuntimeException("알림 전송 중 에러 발생");
     }
 }
