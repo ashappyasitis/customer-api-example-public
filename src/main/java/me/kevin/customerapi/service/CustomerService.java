@@ -1,9 +1,10 @@
 package me.kevin.customerapi.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import me.kevin.customerapi.domain.customer.*;
 import me.kevin.customerapi.mapper.CustomerServiceMapper;
 import me.kevin.customerapi.model.customer.dto.*;
-import me.kevin.customerapi.model.customer.valueobject.DeleteCustomerParams;
 import me.kevin.customerapi.model.customer.valueobject.UpdateCustomerParams;
 import me.kevin.customerapi.model.entity.Customer;
 import me.kevin.customerapi.repository.mybatis.CustomerMapper;
@@ -12,10 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CustomerService {
+    private final CreateCustomerHandler createCustomerHandler;
+    private final DeleteCustomerHandler deleteCustomerHandler;
+    private final ReadCustomerHandler readCustomerHandler;
+    private final SearchCustomerHandler searchCustomerHandler;
+    private final UpdateCustomerHandler updateCustomerHandler;
+
     private final CustomerServiceMapper customerServiceMapper;
     private final CustomerMapper customerMapper;
     private final EmailNotificationService emailNotificationService;
@@ -42,6 +49,7 @@ public class CustomerService {
         );
     }
 
+    @Transactional
     public CreateCustomerResponse createCustomer(CreateCustomerRequest request) {
         CreateCustomerParams createCustomerParams = customerServiceMapper.toCreateCustomerParams(request);
 
@@ -54,6 +62,8 @@ public class CustomerService {
         );
     }
 
+    @Transactional
+
     public UpdateCustomerResponse updateCustomer(UpdateCustomerRequest request) {
         UpdateCustomerParams updateCustomerParams = customerServiceMapper.toUpdateCustomerParams(request);
 
@@ -64,11 +74,9 @@ public class CustomerService {
     }
 
     public DeleteCustomerResponse deleteCustomer(DeleteCustomerRequest request) {
-        DeleteCustomerParams deleteCustomerParams = customerServiceMapper.toDeleteCustomerParams(request);
-
-        customerMapper.disableCustomer(deleteCustomerParams);
+        DeleteCustomerResponse deleteCustomerResponse = deleteCustomerHandler.delete(request);
         emailNotificationService.notifyWhenCustomerDeleted();
 
-        return customerServiceMapper.toDeleteCustomerResponse(deleteCustomerParams);
+        return deleteCustomerResponse;
     }
 }
